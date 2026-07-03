@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IronForge Gym – Train Like a Beast</title>
+
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Chart.js (For Weight Tracker Graph) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+
+    <!-- Apni CSS -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-dumbbell" style="color: var(--primary);"></i>
+                Iron<span>Forge</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item"><a class="nav-link active" href="#home"><i class="bi bi-house"></i>Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#workouts"><i class="bi bi-graph-up"></i>Workouts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#membership"><i class="bi bi-award"></i>Membership</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#bmi"><i class="bi bi-heart-pulse"></i>BMI</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#weight-tracker"><i class="bi bi-graph-up-arrow"></i>Weight</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#workout-log"><i class="bi bi-clipboard-data"></i>Log</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#water-tracker"><i class="bi bi-droplet"></i>Water</a></li>
+                    <li class="nav-item d-lg-none"><a class="nav-link" href="#dashboard"><i class="bi bi-speedometer2"></i>Dashboard</a></li>
+                    <!-- Auth buttons -->
+                    <li class="nav-item" id="authButtons">
+                        <button class="btn btn-outline-custom me-2" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#registerModal">Join Now</button>
+                    </li>
+                    <!-- User dropdown -->
+                    <li class="nav-item dropdown" id="userDropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            <span class="user-avatar" id="userAvatar">U</span>
+                            <span id="userNameDisplay">User</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" style="background: #1a1a2e; border: 1px solid rgba(255,255,255,0.08);">
+                            <li><a class="dropdown-item text-white" href="#dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                            <li><a class="dropdown-item text-white" href="#profile"><i class="bi bi-person me-2"></i>Profile</a></li>
+                            <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.08);"></li>
+                            <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== TOAST CONTAINER ========== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="home">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1>Forge Your <br /><span>Iron Legacy</span></h1>
+                    <p class="mb-4">
+                        Train smarter, not harder. Access premium workout plans,
+                        track your progress, and become the strongest version of yourself.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <button class="btn btn-primary-custom btn-lg px-5" data-bs-toggle="modal" data-bs-target="#registerModal">
+                            <i class="bi bi-person-plus me-2"></i>Start Free Trial
+                        </button>
+                        <a href="#workouts" class="btn btn-outline-custom btn-lg px-5">
+                            <i class="bi bi-play-circle me-2"></i>View Plans
+                        </a>
+                    </div>
+                    <div class="mt-4 d-flex gap-4">
+                        <div><span class="fw-bold text-primary-custom">50+</span> <span class="text-muted">Exercises</span></div>
+                        <div><span class="fw-bold text-primary-custom">12</span> <span class="text-muted">Workout Plans</span></div>
+                        <div><span class="fw-bold text-primary-custom">24/7</span> <span class="text-muted">Access</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== WORKOUT PLANS ========== -->
+    <section class="py-5" id="workouts" style="background: #111;">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <h2 class="section-title text-center">Workout Plans</h2>
+                <p class="section-subtitle">Choose your training style. Built by experts, powered by science.</p>
+            </div>
+            <ul class="nav nav-pills plan-tabs justify-content-center mb-5 gap-2" id="planTabs" role="tablist">
+                <li class="nav-item" role="presentation"><button class="nav-link active" id="single-tab" data-bs-toggle="pill" data-bs-target="#single" type="button"><i class="bi bi-person me-1"></i>Single Muscle</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" id="double-tab" data-bs-toggle="pill" data-bs-target="#double" type="button"><i class="bi bi-people me-1"></i>Double Muscle</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" id="ppl-tab" data-bs-toggle="pill" data-bs-target="#ppl" type="button"><i class="bi bi-arrow-left-right me-1"></i>Push Pull Leg</button></li>
+            </ul>
+            <div class="tab-content" id="planContent">
+                <!-- Single Muscle (Shortened to save space, but keep all cards with video buttons) -->
+                <div class="tab-pane fade show active" id="single">
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-heart-pulse"></i></div><h5 data-muscle="Chest">Chest <span class="badge-muscle ms-2">Single</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Barbell Bench Press – 4×8-12</li><li><i class="bi bi-dot"></i>Incline Dumbbell Press – 4×10</li><li><i class="bi bi-dot"></i>Cable Flyes – 3×15</li><li><i class="bi bi-dot"></i>Dips – 3×12</li><li><i class="bi bi-dot"></i>Push-ups – 3×20</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Chest"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-body-text"></i></div><h5 data-muscle="Back">Back <span class="badge-muscle ms-2">Single</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Deadlifts – 4×6-8</li><li><i class="bi bi-dot"></i>Pull-ups – 4×10</li><li><i class="bi bi-dot"></i>Bent Over Rows – 4×10</li><li><i class="bi bi-dot"></i>Lat Pulldowns – 3×12</li><li><i class="bi bi-dot"></i>Face Pulls – 3×15</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Back"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-arrow-up-circle"></i></div><h5 data-muscle="Shoulders">Shoulders <span class="badge-muscle ms-2">Single</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Overhead Press – 4×8-12</li><li><i class="bi bi-dot"></i>Lateral Raises – 4×15</li><li><i class="bi bi-dot"></i>Front Raises – 3×12</li><li><i class="bi bi-dot"></i>Rear Delt Flyes – 3×15</li><li><i class="bi bi-dot"></i>Shrugs – 3×12</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Shoulders"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-hand-index-thumb"></i></div><h5 data-muscle="Arms">Arms <span class="badge-muscle ms-2">Single</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Barbell Curls – 4×10</li><li><i class="bi bi-dot"></i>Skull Crushers – 4×10</li><li><i class="bi bi-dot"></i>Hammer Curls – 3×12</li><li><i class="bi bi-dot"></i>Tricep Pushdowns – 3×15</li><li><i class="bi bi-dot"></i>Concentration Curls – 3×12</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Arms"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-bicycle"></i></div><h5 data-muscle="Legs">Legs <span class="badge-muscle ms-2">Single</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Squats – 4×8-12</li><li><i class="bi bi-dot"></i>Romanian Deadlifts – 4×10</li><li><i class="bi bi-dot"></i>Leg Press – 3×15</li><li><i class="bi bi-dot"></i>Leg Curls – 3×12</li><li><i class="bi bi-dot"></i>Calve Raises – 4×15</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Legs"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-grid-3x3-gap"></i></div><h5 data-muscle="Core">Core <span class="badge-muscle ms-2">Single</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Crunches – 4×20</li><li><i class="bi bi-dot"></i>Leg Raises – 4×15</li><li><i class="bi bi-dot"></i>Planks – 3×60s</li><li><i class="bi bi-dot"></i>Russian Twists – 3×20</li><li><i class="bi bi-dot"></i>Hanging Knee Raises – 3×12</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Core"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="double">
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-heart"></i></div><h5 data-muscle="Chest+Triceps">Chest + Triceps <span class="badge-muscle ms-2">Double</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Bench Press – 4×8-12</li><li><i class="bi bi-dot"></i>Incline Dumbbell – 4×10</li><li><i class="bi bi-dot"></i>Skull Crushers – 4×10</li><li><i class="bi bi-dot"></i>Cable Flyes – 3×15</li><li><i class="bi bi-dot"></i>Tricep Pushdowns – 3×15</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Chest+Triceps"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-arrow-return-left"></i></div><h5 data-muscle="Back+Biceps">Back + Biceps <span class="badge-muscle ms-2">Double</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Pull-ups – 4×10</li><li><i class="bi bi-dot"></i>Bent Over Rows – 4×10</li><li><i class="bi bi-dot"></i>Barbell Curls – 4×10</li><li><i class="bi bi-dot"></i>Lat Pulldowns – 3×12</li><li><i class="bi bi-dot"></i>Hammer Curls – 3×12</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Back+Biceps"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-arrow-up"></i></div><h5 data-muscle="Shoulders+Core">Shoulders + Core <span class="badge-muscle ms-2">Double</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Overhead Press – 4×8-12</li><li><i class="bi bi-dot"></i>Lateral Raises – 4×15</li><li><i class="bi bi-dot"></i>Crunches – 4×20</li><li><i class="bi bi-dot"></i>Rear Delt Flyes – 3×15</li><li><i class="bi bi-dot"></i>Planks – 3×60s</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Shoulders+Core"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-person-walking"></i></div><h5 data-muscle="Legs+Glutes">Legs + Glutes <span class="badge-muscle ms-2">Double</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Squats – 4×8-12</li><li><i class="bi bi-dot"></i>Romanian Deadlifts – 4×10</li><li><i class="bi bi-dot"></i>Hip Thrusts – 4×12</li><li><i class="bi bi-dot"></i>Leg Press – 3×15</li><li><i class="bi bi-dot"></i>Calve Raises – 4×15</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Legs+Glutes"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-arrow-up-right-circle"></i></div><h5 data-muscle="Chest+Shoulders">Chest + Shoulders <span class="badge-muscle ms-2">Double</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Incline Press – 4×8-12</li><li><i class="bi bi-dot"></i>Overhead Press – 4×10</li><li><i class="bi bi-dot"></i>Lateral Raises – 3×15</li><li><i class="bi bi-dot"></i>Dips – 3×12</li><li><i class="bi bi-dot"></i>Front Raises – 3×12</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Chest+Shoulders"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card"><div class="icon-circle"><i class="bi bi-arrow-left-circle"></i></div><h5 data-muscle="Back+RearDelts">Back + Rear Delts <span class="badge-muscle ms-2">Double</span></h5><ul class="exercise-list"><li><i class="bi bi-dot"></i>Deadlifts – 4×6-8</li><li><i class="bi bi-dot"></i>Pull-ups – 4×10</li><li><i class="bi bi-dot"></i>Rear Delt Flyes – 3×15</li><li><i class="bi bi-dot"></i>Face Pulls – 3×15</li><li><i class="bi bi-dot"></i>Seated Rows – 3×12</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="Back+RearDelts"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="ppl">
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4"><div class="workout-card" style="border-left: 4px solid var(--primary);"><div class="icon-circle" style="background: rgba(230,57,70,0.2);"><i class="bi bi-arrow-up-circle-fill"></i></div><h5 data-muscle="PushDay">Push Day <span class="badge-muscle ms-2">PPL</span></h5><p style="font-size:0.8rem; color: var(--gray);">Chest · Shoulders · Triceps</p><ul class="exercise-list"><li><i class="bi bi-dot"></i>Barbell Bench Press – 4×8-12</li><li><i class="bi bi-dot"></i>Overhead Press – 4×8-12</li><li><i class="bi bi-dot"></i>Incline Dumbbell – 3×10</li><li><i class="bi bi-dot"></i>Lateral Raises – 3×15</li><li><i class="bi bi-dot"></i>Tricep Pushdowns – 3×15</li><li><i class="bi bi-dot"></i>Dips – 3×12</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="PushDay"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card" style="border-left: 4px solid #f4c430;"><div class="icon-circle" style="background: rgba(244,196,48,0.15); color: #f4c430;"><i class="bi bi-arrow-down-circle-fill"></i></div><h5 data-muscle="PullDay">Pull Day <span class="badge-muscle ms-2">PPL</span></h5><p style="font-size:0.8rem; color: var(--gray);">Back · Biceps · Rear Delts</p><ul class="exercise-list"><li><i class="bi bi-dot"></i>Deadlifts – 4×6-8</li><li><i class="bi bi-dot"></i>Pull-ups – 4×10</li><li><i class="bi bi-dot"></i>Bent Over Rows – 4×10</li><li><i class="bi bi-dot"></i>Barbell Curls – 4×10</li><li><i class="bi bi-dot"></i>Face Pulls – 3×15</li><li><i class="bi bi-dot"></i>Hammer Curls – 3×12</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="PullDay"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                        <div class="col-md-6 col-lg-4"><div class="workout-card" style="border-left: 4px solid #42a5f5;"><div class="icon-circle" style="background: rgba(66,165,245,0.15); color: #42a5f5;"><i class="bi bi-bicycle"></i></div><h5 data-muscle="LegDay">Leg Day <span class="badge-muscle ms-2">PPL</span></h5><p style="font-size:0.8rem; color: var(--gray);">Quads · Hamstrings · Calves</p><ul class="exercise-list"><li><i class="bi bi-dot"></i>Squats – 4×8-12</li><li><i class="bi bi-dot"></i>Romanian Deadlifts – 4×10</li><li><i class="bi bi-dot"></i>Leg Press – 3×15</li><li><i class="bi bi-dot"></i>Leg Curls – 3×12</li><li><i class="bi bi-dot"></i>Calve Raises – 4×15</li><li><i class="bi bi-dot"></i>Bulgarian Split Squats – 3×10</li></ul><button class="btn btn-outline-custom btn-sm mt-3 watch-video-btn" data-muscle="LegDay"><i class="bi bi-play-circle me-1"></i>Watch Video</button></div></div>
+                    </div>
+                    <div class="text-center mt-4"><span class="badge bg-primary-custom px-4 py-2">PPL Split – 3 Days On / 1 Day Off</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MEMBERSHIP ========== -->
+    <section class="py-5" id="membership" style="background: #0d0d0d;">
+        <div class="container py-4">
+            <div class="text-center mb-5"><h2 class="section-title text-center">Membership Plans</h2><p class="section-subtitle">Choose the plan that fits your goals. Cancel anytime.</p></div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-6 col-lg-4"><div class="membership-card"><h4 class="text-uppercase" style="letter-spacing:2px; font-weight:300;">Basic</h4><div class="price">$19 <small>/mo</small></div><ul><li><i class="bi bi-check-circle-fill"></i>All workout plans</li><li><i class="bi bi-check-circle-fill"></i>Exercise library</li><li><i class="bi bi-check-circle-fill"></i>Progress tracking</li><li><i class="bi bi-x-circle-fill" style="color:var(--gray);"></i>Personal coaching</li><li><i class="bi bi-x-circle-fill" style="color:var(--gray);"></i>Nutrition guide</li></ul><button class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#registerModal">Get Started</button></div></div>
+                <div class="col-md-6 col-lg-4"><div class="membership-card" style="border: 2px solid var(--primary); position:relative;"><span class="badge bg-primary-custom position-absolute top-0 start-50 translate-middle px-4 py-2">Most Popular</span><h4 class="text-uppercase" style="letter-spacing:2px; font-weight:300;">Pro</h4><div class="price">$39 <small>/mo</small></div><ul><li><i class="bi bi-check-circle-fill"></i>All Basic features</li><li><i class="bi bi-check-circle-fill"></i>Personal coaching</li><li><i class="bi bi-check-circle-fill"></i>Nutrition guide</li><li><i class="bi bi-check-circle-fill"></i>Video form checks</li><li><i class="bi bi-check-circle-fill"></i>Priority support</li></ul><button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#registerModal">Join Pro</button></div></div>
+                <div class="col-md-6 col-lg-4"><div class="membership-card"><h4 class="text-uppercase" style="letter-spacing:2px; font-weight:300;">Elite</h4><div class="price">$59 <small>/mo</small></div><ul><li><i class="bi bi-check-circle-fill"></i>All Pro features</li><li><i class="bi bi-check-circle-fill"></i>1-on-1 zoom sessions</li><li><i class="bi bi-check-circle-fill"></i>Custom meal plans</li><li><i class="bi bi-check-circle-fill"></i>Advanced analytics</li><li><i class="bi bi-check-circle-fill"></i>Guest passes</li></ul><button class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#registerModal">Go Elite</button></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 🔥 NEW: BMI CALCULATOR ========== -->
+    <section class="py-5" id="bmi" style="background: #111;">
+        <div class="container py-4">
+            <div class="text-center mb-4">
+                <h2 class="section-title text-center">💪 BMI Calculator</h2>
+                <p class="section-subtitle">Check your Body Mass Index and get health insights.</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="workout-card">
+                        <form id="bmiForm">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <label class="form-label">Weight (kg)</label>
+                                    <input type="number" class="form-control" id="bmiWeight" placeholder="e.g. 70" required />
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Height (cm)</label>
+                                    <input type="number" class="form-control" id="bmiHeight" placeholder="e.g. 175" required />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary-custom w-100 mt-3">Calculate BMI</button>
+                        </form>
+                        <div id="bmiResult" class="mt-4 text-center" style="display: none;">
+                            <h3 id="bmiValue" class="text-white"></h3>
+                            <p id="bmiCategory" class="fw-bold fs-5"></p>
+                            <p id="bmiMessage" class="text-muted"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 🔥 NEW: WEIGHT TRACKER WITH CHART ========== -->
+    <section class="py-5" id="weight-tracker" style="background: #0d0d0d;">
+        <div class="container py-4">
+            <div class="text-center mb-4">
+                <h2 class="section-title text-center">📊 Weight Tracker</h2>
+                <p class="section-subtitle">Log your weight daily and see your progress on the chart.</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="workout-card">
+                        <form id="weightForm" class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" id="weightDate" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Weight (kg)</label>
+                                <input type="number" step="0.1" class="form-control" id="weightValue" placeholder="e.g. 72.5" required />
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary-custom w-100">➕ Add Entry</button>
+                            </div>
+                        </form>
+                        <div class="mt-4">
+                            <canvas id="weightChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="mt-3">
+                            <h6 class="text-uppercase text-muted" style="font-size:0.8rem;">History</h6>
+                            <ul class="list-unstyled d-flex flex-wrap gap-2" id="weightHistoryList"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 🔥 NEW: WORKOUT LOG ========== -->
+    <section class="py-5" id="workout-log" style="background: #111;">
+        <div class="container py-4">
+            <div class="text-center mb-4">
+                <h2 class="section-title text-center">📝 Workout Log</h2>
+                <p class="section-subtitle">Track your exercises, sets, reps, and weights.</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="workout-card">
+                        <form id="workoutLogForm" class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label">Exercise</label>
+                                <input type="text" class="form-control" id="logExercise" placeholder="e.g. Bench Press" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Sets</label>
+                                <input type="number" class="form-control" id="logSets" placeholder="4" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Reps</label>
+                                <input type="number" class="form-control" id="logReps" placeholder="10" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Weight (kg)</label>
+                                <input type="number" class="form-control" id="logWeight" placeholder="60" required />
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary-custom w-100">➕ Log</button>
+                            </div>
+                        </form>
+                        <div class="mt-4">
+                            <h6 class="text-uppercase text-muted" style="font-size:0.8rem;">Exercise History</h6>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-striped table-hover" id="workoutLogTable">
+                                    <thead>
+                                        <tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th></tr>
+                                    </thead>
+                                    <tbody id="workoutLogBody">
+                                        <tr><td colspan="4" class="text-muted text-center">No logs yet. Start tracking!</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 🔥 NEW: WATER TRACKER ========== -->
+    <section class="py-5" id="water-tracker" style="background: #0d0d0d;">
+        <div class="container py-4">
+            <div class="text-center mb-4">
+                <h2 class="section-title text-center">💧 Water Tracker</h2>
+                <p class="section-subtitle">Stay hydrated! Drink 8 glasses of water daily.</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="workout-card text-center">
+                        <div class="display-1 mb-3" id="waterIcon">💧</div>
+                        <h3><span id="waterCount">0</span> / 8 Glasses</h3>
+                        <div class="progress mb-3" style="height: 20px; background: rgba(255,255,255,0.1);">
+                            <div id="waterProgress" class="progress-bar bg-primary-custom" style="width: 0%;" role="progressbar"></div>
+                        </div>
+                        <div class="d-flex justify-content-center gap-3">
+                            <button class="btn btn-outline-custom btn-lg px-4" onclick="addWater(-1)"><i class="bi bi-dash"></i></button>
+                            <button class="btn btn-primary-custom btn-lg px-4" onclick="addWater(1)"><i class="bi bi-plus"></i></button>
+                        </div>
+                        <button class="btn btn-outline-danger btn-sm mt-3" onclick="resetWater()">Reset Today</button>
+                        <p class="text-muted mt-2" style="font-size:0.8rem;">Goal: 8 glasses (approx 2 liters)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== DASHBOARD ========== -->
+    <section class="py-5 section-hide" id="dashboard" style="background: #111;">
+        <div class="container py-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title mb-0">Dashboard</h2>
+                <span class="text-muted" id="dashboardUser">Welcome back, <strong class="text-white" id="dashUserName">User</strong>!</span>
+            </div>
+            <div class="row g-4 dashboard-stats">
+                <div class="col-6 col-md-3"><div class="stat-box"><div class="number" id="statWorkouts">0</div><div class="label">Workouts Completed</div></div></div>
+                <div class="col-6 col-md-3"><div class="stat-box"><div class="number" id="statStreak">0</div><div class="label">Day Streak</div></div></div>
+                <div class="col-6 col-md-3"><div class="stat-box"><div class="number" id="statPlan">PPL</div><div class="label">Current Plan</div></div></div>
+                <div class="col-6 col-md-3"><div class="stat-box"><div class="number" id="statMembership">Pro</div><div class="label">Membership</div></div></div>
+            </div>
+            <div class="mt-5">
+                <h5 class="text-uppercase text-muted" style="letter-spacing:1px; font-size:0.8rem;">Quick Start</h5>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-4"><button class="btn btn-primary-custom w-100" onclick="startWorkout('Single Muscle')"><i class="bi bi-person me-2"></i>Single Muscle</button></div>
+                    <div class="col-md-4"><button class="btn btn-outline-custom w-100" onclick="startWorkout('Double Muscle')"><i class="bi bi-people me-2"></i>Double Muscle</button></div>
+                    <div class="col-md-4"><button class="btn btn-outline-custom w-100" onclick="startWorkout('Push Pull Leg')"><i class="bi bi-arrow-left-right me-2"></i>Push Pull Leg</button></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PROFILE ========== -->
+    <section class="py-5 section-hide" id="profile" style="background: #0d0d0d;">
+        <div class="container py-4">
+            <h2 class="section-title">Profile</h2>
+            <div class="row g-4 mt-2">
+                <div class="col-lg-4">
+                    <div class="workout-card text-center">
+                        <div class="user-avatar" style="width:80px;height:80px;font-size:2rem;margin:0 auto 16px;background:var(--primary);">U</div>
+                        <h5 id="profileName">User</h5>
+                        <p class="text-muted" id="profileEmail">user@email.com</p>
+                        <p><span class="badge bg-primary-custom" id="profilePlan">Pro</span></p>
+                        <button class="btn btn-outline-custom btn-sm mt-2" onclick="showToast('info', 'Profile updated successfully!')"><i class="bi bi-pencil me-1"></i>Edit Profile</button>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="workout-card">
+                        <h5 class="text-uppercase" style="letter-spacing:1px;">Account Details</h5>
+                        <div class="row mt-3">
+                            <div class="col-md-6"><p><span class="text-muted">Name</span><br /><strong id="profileDetailName">User</strong></p></div>
+                            <div class="col-md-6"><p><span class="text-muted">Email</span><br /><strong id="profileDetailEmail">user@email.com</strong></p></div>
+                            <div class="col-md-6"><p><span class="text-muted">Membership</span><br /><strong id="profileDetailPlan">Pro</strong></p></div>
+                            <div class="col-md-6"><p><span class="text-muted">Joined</span><br /><strong id="profileDetailJoined">Jan 2025</strong></p></div>
+                        </div>
+                        <hr style="border-color:rgba(255,255,255,0.06);" />
+                        <button class="btn btn-danger btn-sm" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5><i class="bi bi-dumbbell" style="color:var(--primary);"></i> IronForge</h5>
+                    <p class="text-muted" style="font-size:0.9rem;">Train like a beast. Built for those who refuse to settle.</p>
+                    <div class="social-links mt-3">
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                        <a href="#"><i class="bi bi-tiktok"></i></a>
+                        <a href="#"><i class="bi bi-discord"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <h5>Quick</h5>
+                    <a href="#home" class="d-block mb-2">Home</a>
+                    <a href="#workouts" class="d-block mb-2">Workouts</a>
+                    <a href="#membership" class="d-block mb-2">Membership</a>
+                </div>
+                <div class="col-md-3">
+                    <h5>Tools</h5>
+                    <a href="#bmi" class="d-block mb-2">BMI Calc</a>
+                    <a href="#weight-tracker" class="d-block mb-2">Weight Tracker</a>
+                    <a href="#workout-log" class="d-block mb-2">Workout Log</a>
+                    <a href="#water-tracker" class="d-block mb-2">Water Tracker</a>
+                </div>
+                <div class="col-md-3">
+                    <h5>Support</h5>
+                    <a href="#" class="d-block mb-2">Help Center</a>
+                    <a href="#" class="d-block mb-2">Contact</a>
+                    <a href="#" class="d-block mb-2">Terms</a>
+                </div>
+            </div>
+            <hr style="border-color:rgba(255,255,255,0.05); margin-top:30px;" />
+            <p class="text-center text-muted" style="font-size:0.8rem;">© 2026 IronForge Gym. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ========== VIDEO MODAL ========== -->
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="videoModalTitle"><i class="bi bi-play-circle me-2 text-primary-custom"></i>Exercise Tutorial</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="ratio ratio-16x9">
+                        <iframe id="videoModalIframe" src="" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODALS ========== -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title"><i class="bi bi-person-plus me-2 text-primary-custom"></i>Join IronForge</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3"><label class="form-label">Full Name</label><input type="text" class="form-control" id="regName" placeholder="John Doe" required /></div>
+                        <div class="mb-3"><label class="form-label">Email Address</label><input type="email" class="form-control" id="regEmail" placeholder="john@example.com" required /></div>
+                        <div class="mb-3"><label class="form-label">Password</label><input type="password" class="form-control" id="regPassword" placeholder="Min 6 characters" minlength="6" required /></div>
+                        <div class="mb-3"><label class="form-label">Membership Plan</label><select class="form-control" id="regPlan"><option value="Basic">Basic – $19/mo</option><option value="Pro" selected>Pro – $39/mo</option><option value="Elite">Elite – $59/mo</option></select></div>
+                        <button type="submit" class="btn btn-primary-custom w-100 py-2">Create Account</button>
+                    </form>
+                    <p class="text-center text-muted mt-3" style="font-size:0.85rem;">Already a member? <a href="#" class="text-primary-custom" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title"><i class="bi bi-box-arrow-in-right me-2 text-primary-custom"></i>Welcome Back</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3"><label class="form-label">Email Address</label><input type="email" class="form-control" id="loginEmail" placeholder="john@example.com" required /></div>
+                        <div class="mb-3"><label class="form-label">Password</label><input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required /></div>
+                        <button type="submit" class="btn btn-primary-custom w-100 py-2">Login</button>
+                    </form>
+                    <p class="text-center text-muted mt-3" style="font-size:0.85rem;">Don't have an account? <a href="#" class="text-primary-custom" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">Join Now</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS + Apna Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
